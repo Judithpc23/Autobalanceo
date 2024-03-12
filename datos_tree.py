@@ -23,13 +23,7 @@ def tree_leaves(root):
         return tree_leaves(p.left) + tree_leaves(p.right)
     
 def tree_for_level(root, level):
-    p = root
-    if p is None:
-        return 0
-    elif level == 0:
-        return 1
-    else:
-        return tree_for_level(p.left, level-1) + tree_for_level(p.right, level-1)
+    pass
 
 
 

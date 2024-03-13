@@ -1,0 +1,13 @@
+// Mi Gráfico
+digraph {
+	"0001.png" [label="0001.png
+48554 bytes" border=2 fixedsize=true fontcolor=WHITE fontsize=7 image="/Users/carlosp/Documents/GitHub/Autobalanceo/Data/0001.png" penwidth=4 shape=rect style=filled]
+	"0002.png" [label="0002.png
+48290 bytes" border=2 fixedsize=true fontcolor=WHITE fontsize=7 image="/Users/carlosp/Documents/GitHub/Autobalanceo/Data/0002.png" penwidth=4 shape=rect style=filled]
+	"0195.png" [label="0195.png
+50202 bytes" border=2 fixedsize=true fontcolor=WHITE fontsize=7 image="/Users/carlosp/Documents/GitHub/Autobalanceo/Data/0195.png" penwidth=4 shape=rect style=filled]
+	"carsgraz_008.png" [label="carsgraz_008.png
+479915 bytes" border=2 fixedsize=true fontcolor=WHITE fontsize=7 image="/Users/carlosp/Documents/GitHub/Autobalanceo/Data/carsgraz_008.png" penwidth=4 shape=rect style=filled]
+	"bike_247.png" [label="bike_247.png
+751540 bytes" border=2 fixedsize=true fontcolor=WHITE fontsize=7 image="/Users/carlosp/Documents/GitHub/Autobalanceo/Data/bike_247.png" penwidth=4 shape=rect style=filled]
+}

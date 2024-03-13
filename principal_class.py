@@ -1,6 +1,10 @@
+from lib2to3.pytree import type_repr
 from queue import Queue
 from typing import Any, List, Optional, Tuple
 from xmlrpc.client import Boolean
+
+from sympy import nextprime
+import grafico as gf
 
 class Node:
 
@@ -27,6 +31,27 @@ class Node:
     def set_data(self, data):
         self.__data = data
 
+    def set_type(self, name:str) -> None:
+        type = None
+        
+        if(name.split()[0]== '0'):
+            type = 'Flower'
+        elif(name.split('-')[0] == 'carsgraz'):
+            type = 'Car'
+        elif(name.split('.')[0] == 'cat'):
+            type = 'Cat'
+        elif(name.split('-')[0] == 'rider'):
+            type = 'Human'
+        elif(name.split('.')[0] == 'dog'):
+            type = 'Dog'
+        elif(name.split('-')[0] == 'horse'):
+            type = 'Horse'
+        elif(name.split('.')[0] == 'bike'):
+            type = 'Bike'
+        
+        return type
+
+
 
 class Tree:
 
@@ -44,7 +69,6 @@ class Tree:
             else:
                 pad = p
                 p = p.get_right()
-
         return p, pad
     
     def search_father(self, data_s: Any) -> None:
@@ -102,7 +126,6 @@ class Tree:
         if root == None:
             root = to_insert
             return True
-        
         else:
             p, pad = self.search(elem)
             if p != None:
@@ -114,6 +137,10 @@ class Tree:
                 pad.set_node_right(to_insert)
             
             return True
+    
+    def insert_node(self, node):
+        pass
+
     
     def delete(self, elem) -> bool:
         p, pad = self.search(elem)

@@ -32,6 +32,9 @@ class Tree:
 
     def __init__(self, root: 'Node' = None) -> None:
         self.__root = root
+    
+    def get_root(self):
+        return self.__root
 
     def search(self, elem):
         p, pad = self.__root, None
@@ -102,18 +105,22 @@ class Tree:
         if root == None:
             root = to_insert
             return True
-        
         else:
             p, pad = self.search(elem)
             if p != None:
                 return False
-            
             elif elem < pad.get_data():
                 pad.set_node_left(to_insert)
             else:
                 pad.set_node_right(to_insert)
-            
             return True
+    
+    def pred (self, node: 'Node'):
+        p, pad = node.get_left(), None
+        while p.get_right() is not None:
+            pad = p
+            p = p.get_right()
+        return p, pad
     
     def delete(self, elem) -> bool:
         p, pad = self.search(elem)
@@ -137,7 +144,7 @@ class Tree:
                     pad.set_node_right(p.get_right())
             
             else:
-                pred, pad_pred = self.pred(p) #Hacer algoritmo de predecesor
+                pred, pad_pred = self.pred(p) #Algoritmo de predecesor
                 p.set_data(pred.get_data())
                 if pred.get_left() != None:
                     pad_pred.set_node_right(pred.get_left())

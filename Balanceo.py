@@ -36,3 +36,23 @@ class AVLTree:
             else:
                 return self.rotate_left_right(node)
         return node
+    
+    def rotate_left(self, node: "Node"):
+        auxNode = node.right
+        node.right = auxNode.left
+        auxNode.left = node
+        return auxNode
+
+    def rotate_right(self, node: "Node"):
+        auxNode = node.left
+        node.left = auxNode.right
+        auxNode.right = node
+        return auxNode
+
+    def rotate_right_left(self, node: "Node"):
+        node.right = self.rotate_right(node.right)
+        return self.rotate_left(node)
+
+    def rotate_left_right(self, node: "Node"):
+        node.left = self.rotate_left(node.left)
+        return self.rotate_right(node)

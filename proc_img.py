@@ -4,15 +4,18 @@ import numpy as np
 
 from PIL import Image
 
-ejemplo_dir = 'Data/bike'
 
-with os.scandir(ejemplo_dir) as ficheros:
-    ficheros = [fichero.name for fichero in ficheros if fichero.is_file()]
 
-print(ficheros)
+print("VECTOR CON NOMBRES DE ")
+Bike = 'Data/Bike'
+with os.scandir(Bike) as Bikes:
+    Bikes = [Bike.name for Bike in Bikes if Bike.is_file()]
+print(Bikes)
 
-for img in ficheros:
-    im = Image.open(img)
-    rgb_im = im.convert('RGB')
-    img = img.split('.')[0]
-    rgb_im.save(img,'.jpg', quality=95)
+
+
+Car = 'Data/cars'
+with os.scandir(Car) as Cars:
+    Cars = [Car.name for Car in Cars if Car.is_file()]
+print(Cars)
+

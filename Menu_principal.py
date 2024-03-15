@@ -71,10 +71,28 @@ def menu_principal():
             tipo_busqueda = input("Ingrese el número de la operación que desea realizar: ")
             
             if tipo_busqueda == "1":
+                busqueda = input("Escriba el nombre del archivo asociado al nodo: ")
                 print("------------------------Buscar un nodo por nombre de archivo------------------------")
                 menu = regresar_menu(menu)
                 
             if tipo_busqueda == "2":
+                print("1.Buscar nodos por tipo")
+                print("2.Buscar nodos peso")
+                print("3.Buscar nodos por peso y tipo")
+                tipo_busqueda2 = input('Digita la operación a realizar: ')
+                
+                if(tipo_busqueda2 == "1" or tipo_busqueda2 == "3"):
+                    busqueda = input("Escriba el tipo de archivo que desea buscar: ")
+                    
+                    
+                if(tipo_busqueda2 == "2" or tipo_busqueda2 == "3"):
+                    print("Escriba el valor del peso minimo y maximo del archivo en MB que desea buscar: ")
+                    busqueda.min = input("Valor de peso Minimo: ")
+                    busqueda.maxima = input("Valor de peso Maximo: ")
+                    
+                elif tipo_busqueda2 != "1" or tipo_busqueda2 != "2" or tipo_busqueda2 != "2":
+                    print("Operación no válida")
+                
                 print("------------------------Buscar nodos por tipo y peso de archivo------------------------")
                 menu = regresar_menu(menu)
                 

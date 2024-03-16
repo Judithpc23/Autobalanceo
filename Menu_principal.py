@@ -82,13 +82,13 @@ def menu_principal():
                 tipo_busqueda2 = input('Digita la operación a realizar: ')
                 
                 if(tipo_busqueda2 == "1" or tipo_busqueda2 == "3"):
-                    busqueda = input("Escriba el tipo de archivo que desea buscar: ")
-                    
+                    print("Escriba el tipo de archivo que desea buscar", "/n", "(Las categorias permitidas son: Bike, Cars, Cats, Dogs, Flowers, Horses y Human)")
+                    busqueda = input("Categoria: ")
                     
                 if(tipo_busqueda2 == "2" or tipo_busqueda2 == "3"):
-                    print("Escriba el valor del peso minimo y maximo del archivo en MB que desea buscar: ")
-                    busqueda.min = input("Valor de peso Minimo: ")
-                    busqueda.maxima = input("Valor de peso Maximo: ")
+                    print("Escriba el valor del peso minimo y maximo del archivo en Bytes que desea buscar: ")
+                    peso_min = input("Valor de peso Minimo: ")
+                    peso_max = input("Valor de peso Maximo: ")
                     
                 elif tipo_busqueda2 != "1" or tipo_busqueda2 != "2" or tipo_busqueda2 != "2":
                     print("Operación no válida")

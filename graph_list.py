@@ -3,8 +3,8 @@ import graphviz as gv
 from typing import List
 from typing import Any
 import os
+from PIL import Image
 
-from grafico import Grafico
 
 class GraphList:
     def __init__(self) -> None:
@@ -20,15 +20,43 @@ class GraphList:
             self.__n += 1
 
     def add_edge(self, lista_level: List[Any], vi, vf) -> bool:
-      self.__L[lista_level.index(vi)].append(vf)
-      return True
+        self.__L[lista_level.index(vi)].append(vf)
+        return True
+  
+    def Search_image(self,name_file: str) -> str:
+        carpeta = 'Data'
+        directorio_actual = os.path.abspath(carpeta)
+        for imagenes in os.listdir(carpeta):
+            path = os.path.join(directorio_actual, imagenes)
+            Format = imagenes.split('.')[1]
+            imagenes = imagenes.split('.')[0]
+            if imagenes == name_file:
+                if(Format == 'bmp'):
+                    bmp_path = path
+                    # Cargar la imagen BMP
+                    imagen_bmp = Image.open(bmp_path)
+                    # Guardar la imagen en formato PNG
+                    png_path = path
+                    png_path = png_path.replace('bmp', 'png')
+                    imagen_bmp.save(png_path, "PNG")
+                    os.remove(bmp_path)
+                    path = png_path
+                    #print("Se encontro una imagen en formato bmp, se ha convertido a png")
+                    return path
+                else:
+                    print("Imagen encontrada satisfactoriamente")
+                    return path
+
+        print("Imagen no encontrada")
+        return None
+        
 
     def plot(self, lista_level) -> "gv.Graph":
         graph = gv.Graph()
         #Definir los nodos del grafo
         for i in range(self.__n):
-            if Grafico.Search_image(f'{lista_level[i]}') != None:
-                imagen = Grafico.Search_image(f'{lista_level[i]}')
+            if self.Search_image(f'{lista_level[i]}') != None:
+                imagen = self.Search_image(f'{lista_level[i]}')
                 name_file = str(os.path.basename(imagen))
                 size = str(os.path.getsize(imagen))
                 graph.node(f'{lista_level[i]}', f'{name_file}\n{size} bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
@@ -46,4 +74,5 @@ class GraphList:
                     graph.edge(f'{lista_level[i]}', f'{j}')
                     #Añado a la lista
                     edges.append((i, j))
+                    
         return graph.render(f'test-grafico-generado/mi_grafico{random.randint(0,50)}',format='png', view=False)

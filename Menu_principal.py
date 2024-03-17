@@ -2,6 +2,7 @@
 from principal_class import Tree, Node
 from datos_tree import tree_size, tree_height, tree_leaves, tree_for_level
 from grafico import Grafico
+from graph_list import GraphList
 from graphviz import Digraph
 
 #Función para regresar al menú principal
@@ -28,22 +29,21 @@ def regresar_menu(menu):
         menu = False
     
     return menu
-            
-dot = Digraph(comment='Mi Gráfico')
 
 #Función para el menú principal
 def menu_principal():
     
-    print("-----Bienvenido al programa de creacion de arboles AVL-----")
-    print("-----Cargando datos de la carpeta Data-----")
+    print("----- Bienvenido al programa de creacion de arboles AVL -----")
+    print("----- Cargando datos de la carpeta Data -----")
     elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
     
     #Creación del árbol
     Arbol = Tree(Node(elem_root))
-    
+    '''
     #Creación del gráfico
     grafico = Grafico()
     grafico.insert_imagen_nodo(Arbol.get_root().get_data())
+    '''
     
     #Inicializar vector con los nodos de busqueda
     nodos_consultados = []
@@ -66,23 +66,26 @@ def menu_principal():
         menu_section = input("Ingrese el número de la operación que desea realizar: ")
 
         if menu_section == "1":
-            print("------------------------Insertar un nodo------------------------")
+            print("------------------------ Insertar un nodo ------------------------")
             elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001'): ")
             elem = elem.lower()
-            if grafico.Search_image(elem)!= None:
+            if GraphList.Search_image(elem)!= None:
                 Arbol.insert(elem)
-                grafico.insert_imagen_nodo(elem)
                 print('Inserción exitosa')
             else:
                 print('Elemento no existe, intente con otro nombre de archivo')
-            print("------------------------Imagen del Arbol------------------------")
-            grafico.mostrar_grafico()
+            
+            print("------------------------ Arbol creado en la carpeta test-grafico-generado ------------------------")
+            Arbol.get_list_ady().plot(Arbol.levels_nr())
             
             menu = regresar_menu(menu)
             
         if menu_section == "2":
-            print("------------------------Eliminar un nodo------------------------")
-            print("------------------------Mostrar el árbol------------------------")
+            print("------------------------ Eliminar un nodo ------------------------")
+            elem = input("Escribe el nombre del archivo a eliminar sin su extención (Ejemplo: '0001'): ")
+            elem = elem.lower()
+            
+            print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
             menu = regresar_menu(menu)
             
         if menu_section == "3":
@@ -93,18 +96,18 @@ def menu_principal():
             tipo_busqueda = input("Ingrese el número de la operación que desea realizar: ")
             
             if tipo_busqueda == "1":
-                print("------------------------Buscar un nodo por nombre de archivo------------------------")
+                print("------------------------ Buscar un nodo por nombre de archivo ------------------------")
                 busqueda = input("Escriba el nombre del archivo asociado al nodo, sin su extención (Ejemplo: '0001'): ")
                 busqueda = busqueda.lower()
-                if grafico.Search_image(busqueda)!= None:
+                if GraphList.Search_image(busqueda)!= None:
                     p, pad = Arbol.search(busqueda)
                     nodos_consultados.append(p)
                     print('Nodo Encontrado, agregado a la lista de nodos consultados')
                 else:
                     print('Algun nodo con ese archivo no se ha creado, intente con otro nombre de archivo')
                 
-                print("------------------------Imagen del Arbol------------------------")
-                grafico.mostrar_grafico()
+                print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
+                Arbol.get_list_ady().plot(Arbol.levels_nr())
 
                 menu = regresar_menu(menu)
                 
@@ -116,7 +119,7 @@ def menu_principal():
                 tipo_busqueda2 = input('Digita la operación a realizar: ')
                 
                 if(tipo_busqueda2 == "1"):
-                    print("------------------------Buscar nodos por tipo ------------------------")
+                    print("------------------------ Buscar nodos por tipo de archivo ------------------------")
                     print("Escriba el tipo de archivo que desea buscar", "/n", "(Las categorias permitidas son: Bike, Cars, Cats, Dogs, Flowers, Horses y Human)")
                     busqueda = input("Categoria: ")
                     busqueda = busqueda.lower()
@@ -135,7 +138,7 @@ def menu_principal():
                     
                 if(tipo_busqueda2 == "2"):
                     
-                    print("------------------------Buscar nodos por peso de archivo------------------------")
+                    print("------------------------ Buscar nodos por peso de archivo ------------------------")
                         
                     print("Escriba el valor del peso minimo y maximo del archivo en Bytes que desea buscar: ")
                     peso_min = input("Valor de peso Minimo: ")
@@ -157,7 +160,7 @@ def menu_principal():
                     flag_type = False
                     flag_size = False
                     
-                    print("------------------------Buscar nodos por peso de archivo y tipo ------------------------")
+                    print("------------------------ Buscar nodos por peso y tipo de archivo ------------------------")
                     print("Escriba el tipo de archivo que desea buscar", "/n", "(Las categorias permitidas son: Bike, Cars, Cats, Dogs, Flowers, Horses y Human)")
                     busqueda = input("Categoria: ")
                     
@@ -225,29 +228,30 @@ def menu_principal():
                 else:
                     Consul_info = nodos_consultados[int(Consul_info)-1]
                     print("<<<<<< Datos del nodo encontrado >>>>>>")
-                    busq_nodo = Arbol.search(Consul_info)
-                    Arbol.node_datas(busq_nodo)
+                    Arbol.node_datas(Consul_info)
             
             menu = regresar_menu(menu)
             
         if menu_section == "5": 
             print("------------------------ Recorrido del Arbol AVL por niveles ------------------------")
             Arbol.__levels_r(Arbol.get_root(), 0)
+            
+            
 
             menu = regresar_menu(menu)
             
         if menu_section == "6": 
-            print("------------------------Mostrar el árbol------------------------")
-            
+            print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
+            Arbol.get_list_ady().plot(Arbol.levels_nr())
             menu = regresar_menu(menu)
             
         if menu_section == "7":             
-            print("-----Saliendo del programa-----")
+            print("----- Saliendo del programa -----")
             menu = False
             
         if menu_section != "1" and menu_section != "2" and menu_section != "3" and menu_section != "4" and menu_section != "5" and menu_section != "6" and menu_section != "7": 
             print("Operación seleccionada no válida")
             menu = regresar_menu(menu)
             
-    print("-----Gracias por utilizar el programa------")
-    print("-----Hasta luego-----")
+    print("----- Gracias por utilizar el programa ------")
+    print("----- Hasta luego -----")

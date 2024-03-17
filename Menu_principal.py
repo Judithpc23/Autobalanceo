@@ -1,7 +1,7 @@
 
 from principal_class import Tree, Node
 from datos_tree import tree_size, tree_height, tree_leaves, tree_for_level
-import grafico as graf
+from grafico import Grafico
 from graphviz import Digraph
 
 #Función para regresar al menú principal
@@ -37,9 +37,9 @@ def menu_principal():
     print("-----Bienvenido al programa de creacion de arboles AVL-----")
     print("-----Cargando datos de la carpeta Data-----")
     elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
-    Arbol = Tree()
-    Tree.set_root(Arbol, elem_root)
-    Grafico = graf.Grafico()
+    Arbol = Tree(Node(elem_root))
+    grafico = Grafico()
+    grafico.insert_imagen_nodo(Arbol.get_root().get_data())
     
     menu = True
     
@@ -60,13 +60,14 @@ def menu_principal():
             print("------------------------Insertar un nodo------------------------")
             elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001'): ")
             elem = elem.lower()
-            if Grafico.Search_image(elem)!= None:
+            if grafico.Search_image(elem)!= None:
                 Arbol.insert(elem)
+                grafico.insert_imagen_nodo(elem)
                 print('Inserción exitosa')
             else:
                 print('Elemento no existe, intente con otro nombre de archivo')
             print("------------------------Imagen del Arbol------------------------")
-            Grafico.mostrar_grafico()
+            grafico.mostrar_grafico()
             
             menu = regresar_menu(menu)
             

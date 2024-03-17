@@ -1,10 +1,11 @@
-from graphviz import Digraph
+from graphviz import Digraph, view
 import os
+
 import principal_class as pc
 
 from PIL import Image
 
-class Grafico:
+class Grafico():
     
     def __init__(self) -> None:
         self.dot = Digraph(comment='Arbol AVL')
@@ -45,7 +46,7 @@ class Grafico:
             print(imagen)
             name_file = str(os.path.basename(imagen))
             size = str(os.path.getsize(imagen))
-            new_node = self.node(name_file, name_file + '\n' + size + ' bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
+            new_node = self.dot.node(name_file, name_file + '\n' + size + ' bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
             return new_node
         else:
             print("Imagen no encontrada, no se puede insertar en el nodo")
@@ -55,15 +56,15 @@ class Grafico:
     def node_conection(self, name_file):
         if(self.insert_imagen_nodo(self, name_file) != None):
             node = self.insert_imagen_nodo(self, name_file)
-            self.edge(node, node, arrowsize='0.5')
+            self.dot.edge(node, node, arrowsize='0.5')
             return self
         else:
             print("No se puede conectar el nodo")
             return False
 
     def mostrar_grafico(self):
-        self.render('test-output/mi_grafico',format='jpg', view=True)
-        return self
+        imagen = self.dot.render('test-output/mi_grafico', format='pdf', view=True)
+        return imagen
     
 """
 # Crea un objeto de gráfico dirigido

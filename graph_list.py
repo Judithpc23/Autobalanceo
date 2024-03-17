@@ -2,6 +2,9 @@ import random
 import graphviz as gv
 from typing import List
 from typing import Any
+import os
+
+from grafico import Grafico
 
 class GraphList:
     def __init__(self) -> None:
@@ -24,7 +27,13 @@ class GraphList:
         graph = gv.Graph()
         #Definir los nodos del grafo
         for i in range(self.__n):
-            graph.node(f'{lista_level[i]}', f'{lista_level[i]}')
+            if Grafico.Search_image(f'{lista_level[i]}') != None:
+                imagen = Grafico.Search_image(f'{lista_level[i]}')
+                name_file = str(os.path.basename(imagen))
+                size = str(os.path.getsize(imagen))
+                graph.node(f'{lista_level[i]}', f'{name_file}\n{size} bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
+            else:
+                graph.node(f'{lista_level[i]}' , f'{lista_level[i]}', fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
 
         #Lista para las aristas, para no repetir aristas
         edges = []

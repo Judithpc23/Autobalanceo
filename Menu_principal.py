@@ -4,7 +4,7 @@ from datos_tree import tree_size, tree_height, tree_leaves, tree_for_level
 import grafico as graf
 
 
-Arbol = Tree
+Arbol = Tree()
 
 def regresar_menu(menu):
     menu = False
@@ -52,7 +52,10 @@ def menu_principal():
             elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001')")
             elem = elem.lower()
             if graf.Search_image(elem)!= None:
-                Tree.insert(Arbol,elem)
+                if Arbol.get_root() == None:
+                    Arbol.set_root(elem)
+                else:
+                    Arbol.insert(elem)
                 print('Inserción exitosa')
             else:
                 print('Elemento no existe, intente con otro nombre de archivo')

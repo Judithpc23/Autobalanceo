@@ -1,5 +1,4 @@
 from graphviz import Digraph
-import imagesize
 from matplotlib.ft2font import FIXED_SIZES
 from numpy import size
 import os

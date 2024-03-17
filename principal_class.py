@@ -3,7 +3,7 @@ from queue import Queue
 from typing import Any, List, Optional, Tuple
 from xmlrpc.client import Boolean
 
-from sympy import nextprime
+from sympy import nextprime, root
 import grafico as gf
 
 class Node:
@@ -55,14 +55,17 @@ class Node:
 
 class Tree:
 
-    def __init__(self, root: 'Node' = None) -> None:
+    def __init__(self) -> None:
+        self.__root = None
+    
+    def set_root(self, root):
         self.__root = root
     
     def get_root(self):
         return self.__root
 
     def search(self, elem):
-        p, pad = self.__root, None
+        p, pad = self.get_root(), None
         while (p != None):
             if p.get_data() == elem:
                 return p, pad
@@ -124,7 +127,7 @@ class Tree:
         return node
         
     def insert(self, elem) -> bool:
-        root = self.__root
+        root = self.get_root()
         to_insert = Node(elem)
         if root == None:
             root = to_insert

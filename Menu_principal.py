@@ -37,7 +37,8 @@ def menu_principal():
     print("-----Bienvenido al programa de creacion de arboles AVL-----")
     print("-----Cargando datos de la carpeta Data-----")
     elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
-    Arbol = Tree(Node(elem_root))
+    Arbol = Tree()
+    Tree.set_root(Arbol, elem_root)
     Grafico = graf.Grafico()
     
     menu = True

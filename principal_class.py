@@ -3,7 +3,6 @@ from queue import Queue
 from typing import Any, List, Optional, Tuple
 from xmlrpc.client import Boolean
 
-from sympy import nextprime, root
 import grafico as gf
 
 class Node:

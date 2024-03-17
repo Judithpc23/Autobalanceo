@@ -1,11 +1,22 @@
-from lib2to3.pytree import type_repr
-from queue import Queue
-from typing import Any, List, Optional, Tuple
-from xmlrpc.client import Boolean
+from typing import Any, List, Optional, Type
 import os
 
-import grafico as gf
+from numpy import delete
+from graph_list import GraphList
 
+class Queue:
+ 
+    def __init__(self) -> None:
+        self.queue: List['Node'] = []
+ 
+    def put(self, elem: Any) -> None:
+        self.queue.append(elem)
+ 
+    def get(self) -> Any:
+        return self.queue.pop(0)
+ 
+    def empty(self) -> bool:
+        return len(self.queue) == 0
 
 class Node:
 
@@ -66,15 +77,41 @@ class Node:
 
 class Tree:
 
-    def __init__(self) -> None:
-        self.__root = None
+    def __init__(self, root: 'Node') -> None:
+        self.__root = root
+        self.__list_ady: Optional['GraphList'] = [[]]
+
+        self.set_list_ady()
         
     def set_root(self, root):
         self.__root = root
-        gf.Grafico().insert_imagen_nodo(root.get_data())
+        # gf.Grafico().insert_imagen_nodo(root.get_data())
     
     def get_root(self):
         return self.__root
+    
+    #Construir lista de adyacencia.
+    def set_list_ady(self):
+        self.__list_ady = GraphList()
+        self.__list_ady.add_vertex(self.get_size(self.get_root()))
+        
+        p = self.get_root() 
+        q: List['Node'] = []
+        q.append(p)
+        while not len(q) == 0:
+            p = q.pop(0)
+            pad = self.search_father(p.get_data())
+            if p.get_left() is not None:
+                q.append(p.get_left())
+            if p.get_right() is not None:
+                q.append(p.get_right())
+            if p is not None and pad is not None:
+              self.__list_ady.add_edge(self.levels_nr(), pad, p.get_data())
+
+    #Obtener lista de adyacencia del árbol
+    def get_list_ady(self):
+        return self.__list_ady
+    
     
     # <<<<<<<<<<<<<<<<<< FUNCIONES DE BUSQUEDA, INSERCIÓN Y ELIMINACIÓN >>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -96,6 +133,7 @@ class Tree:
         to_insert = Node(elem)
         if root == None:
             root = to_insert
+            self.set_list_ady()
             return True
         else:
             p, pad = self.search(elem)
@@ -105,6 +143,7 @@ class Tree:
                 pad.set_node_left(to_insert)
             else:
                 pad.set_node_right(to_insert)
+            self.set_list_ady()
             return True
 
     
@@ -137,9 +176,17 @@ class Tree:
                 else:
                     pad_pred.set_node_right(None)
             
+            self.set_list_ady()
             return True
         return False
     
+    #Tamaño del árbol.
+    def get_size(self, node:'Node'):
+      if node is None:
+        return 0
+      else:
+        return self.get_size(node.get_left()) + 1 + self.get_size(node.get_right())
+
     def pred (self, node: 'Node'):
         p, pad = node.get_left(), None
         while p.get_right() is not None:
@@ -150,31 +197,33 @@ class Tree:
     # <<<<<<<<<<<<<<<<<< FUNCIONES DE BUSQUEDA DE PARIENTES >>>>>>>>>>>>>>>>>>>>>>>>
     
     #Busqueda del padre por un dato del nodo.
-    def search_father_data(self, data_s: Any) -> None:
+    def search_father(self, data_s: Any) -> None:
         p, pad = self.__root, None
-        s, flag = [], False
+        s: List["Node"] = [] 
+        flag =  False
         while (p is not None or len(s) != 0) and not flag:
             if p is not None:
                 if p.get_data() == data_s:
                     if pad is not None:
-                        print(f'El padre de {data_s!r} es {pad.get_data()!r}')
+                        return pad.get_data()
                     flag = True
                 else:
                     s.append(p)
                     pad = p
                     p = p.get_left()
             else:
-                p = s.remove()
+                p = s.pop()
                 pad = p
                 p = p.get_right()
 
         if not flag or pad is None:
-            print(f'Para {data_s!r} no hay padre')
+            return None
             
     #Busqueda del padre por un nodo.
     def search_father_node(self, node: "Node") -> None:
         p, pad = self.__root, None
-        s, flag = [], False
+        s: List["Node"] = []
+        flag = False
         while (p is not None or len(s) != 0) and not flag:
             if p is not None:
                 if p.get_data() == node.get_data():
@@ -188,14 +237,48 @@ class Tree:
                     pad = p
                     p = p.get_left()
             else:
-                p = s.remove()
+                p = s.pop()
                 pad = p
                 p = p.get_right()
 
         if not flag or pad is None:
             print(f'Para {data_s!r} no hay padre')
             return None
+        
+    #Busqueda del abuelo de un nodo.
+    def searchGrandPa(self, elem: str):
+        p, pad = self.search(elem)
+        pad, grandPa = self.search(pad.get_data())
+        return grandPa
     
+    #Busqueda del tío de un nodo.
+    def searchUncle(self, elem: str) -> Optional['bool']:
+        p, pad = self.search(elem)
+        grandPa = self.searchGrandPa(elem)
+        if grandPa is not None:
+          if grandPa.get_left() == pad:
+              if grandPa.get_right() is not None:
+                  return grandPa.get_right()
+          else:
+              if grandPa.get_left() is not None:
+                  return grandPa.get_left()
+        return False
+    
+    #Recorrido por niveles
+    def levels_nr(self) -> None:
+        p = self.get_root()
+        q: List['Node'] = []
+        q.append(p)
+        lista = []
+        while not len(q) == 0:
+            p = q.pop(0)
+            lista.append(p.get_data())
+            if p.get_left() is not None:
+                q.append(p.get_left())
+            if p.get_right() is not None:
+                q.append(p.get_right())
+        return lista
+
     # <<<<<<<<<<<<<<<<<< RECORRIDO POR NIVELES RECURSIVO >>>>>>>>>>>>>>>>>>>>>>>>
     def get_height(self, node: "Node"):
         if node is None:
@@ -207,16 +290,16 @@ class Tree:
         if node != None:
             if n == 0:
                 print(node.data, end=' ')
-            self.list_level(node.left, n-1)
-            self.list_level(node.right, n-1)
+            self.list_level(node.get_left(), n-1)
+            self.list_level(node.get_right(), n-1)
     
     def __levels_r(self, node, level) -> None:
-        if level <= self.getHeight(self.root) - 1:
+        if level <= self.get_height(self.__root) - 1:
             self.list_level(node, level)
             self.__levels_r(node, level + 1)
     
     def levels(self) -> None:
-        self.__levels_r(self.root, 0)
+        self.__levels_r(self.__root, 0)
         
         
     # <<<<<<<<<<<<<<<<<< FUNCIONES PARA EL AUTOBALANCEO >>>>>>>>>>>>>>>>>>>>>>>>
@@ -288,3 +371,23 @@ class Tree:
             if nodo.get_right() != None:
                 queue.put(nodo.get_right())
         return categoria
+
+
+T = Tree(Node(7))
+T.insert(4)
+T.insert(54)
+T.insert(40)
+T.insert(60)
+T.insert(3)
+print(T.insert(5))
+print(T.searchGrandPa(40).get_data())
+print(T.searchUncle(40).get_data())
+
+T.get_list_ady().plot(T.levels_nr())
+
+print(T.levels_nr())
+T.delete(60)
+
+print(T.levels_nr())
+print(T.get_list_ady().get_L())
+T.get_list_ady().plot(T.levels_nr())

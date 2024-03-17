@@ -60,7 +60,7 @@ def menu_principal():
             print("------------------------Insertar un nodo------------------------")
             elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001'): ")
             elem = elem.lower()
-            if graf.Search_image(elem)!= None:
+            if Grafico.Search_image(elem)!= None:
                 Arbol.insert(elem)
                 print('Inserción exitosa')
             else:

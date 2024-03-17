@@ -9,7 +9,7 @@ class Grafico:
     def __init__(self) -> None:
         self.dot = Digraph(comment='Arbol AVL')
 
-    def Search_image(name_file):
+    def Search_image(self, name_file):
         carpeta = 'Data'
         directorio_actual = os.path.abspath(carpeta)
         for imagenes in os.listdir(carpeta):

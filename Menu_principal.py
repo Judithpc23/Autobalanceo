@@ -1,11 +1,10 @@
 
-from principal_class import Tree
+from principal_class import Tree, Node
 from datos_tree import tree_size, tree_height, tree_leaves, tree_for_level
 import grafico as graf
+from graphviz import Digraph
 
-
-Arbol = Tree()
-
+#Función para regresar al menú principal
 def regresar_menu(menu):
     menu = False
     
@@ -30,14 +29,23 @@ def regresar_menu(menu):
     
     return menu
             
+dot = Digraph(comment='Mi Gráfico')
 
+#Función para el menú principal
 def menu_principal():
+    #Creación del árbol
+    print("-----Bienvenido al programa de creacion de arboles AVL-----")
+    print("-----Cargando datos de la carpeta Data-----")
+    elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
+    Arbol = Tree(Node(elem_root))
+    Grafico = graf.Grafico()
     
     menu = True
     
     while menu:
-        print("ARBOLES AVL")
-        print("---Bienvenidos a la implementación de árboles AVL---")
+        
+        print("ALBOL AVL CREADO SATISFACTORIAMENTE")
+        print("----- Bienvenidos a las operaciones de árboles AVL -----")
         print("¿Qué operación desea realizar?")
         print("1. Insertar un nodo")
         print("2. Eliminar un nodo")
@@ -49,17 +57,16 @@ def menu_principal():
 
         if menu_section == "1":
             print("------------------------Insertar un nodo------------------------")
-            elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001')")
+            elem = input("Escribe el nombre del archivo a ingresar sin su extención (Ejemplo: '0001'): ")
             elem = elem.lower()
             if graf.Search_image(elem)!= None:
-                if Arbol.get_root() == None:
-                    Arbol.set_root(elem)
-                else:
-                    Arbol.insert(elem)
+                Arbol.insert(elem)
                 print('Inserción exitosa')
             else:
                 print('Elemento no existe, intente con otro nombre de archivo')
-            print("------------------------Mostrar el árbol------------------------")
+            print("------------------------Imagen del Arbol------------------------")
+            Grafico.mostrar_grafico()
+            
             menu = regresar_menu(menu)
             
         if menu_section == "2":

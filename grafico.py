@@ -6,62 +6,67 @@ import principal_class as pc
 
 from PIL import Image
 
-
-dot = Digraph(comment='Mi Gráfico')
-
-def Search_image(name_file):
-    carpeta = 'Data'
-    directorio_actual = os.path.abspath(carpeta)
-    for imagenes in os.listdir(carpeta):
-        path = os.path.join(directorio_actual, imagenes)
-        Format = imagenes.split('.')[1]
-        imagenes = imagenes.split('.')[0]
-        if imagenes == name_file:
-            if(Format == 'bmp'):
-                bmp_path = path
-                # Cargar la imagen BMP
-                imagen_bmp = Image.open(bmp_path)
-                # Guardar la imagen en formato PNG
-                png_path = path
-                png_path = png_path.replace('bmp', 'png')
-                imagen_bmp.save(png_path, "PNG")
-                os.remove(bmp_path)
-                path = png_path
-                #print("Se encontro una imagen en formato bmp, se ha convertido a png")
-                return path
-            else:
-                print("Imagen encontrada satisfactoriamente")
-                return path
-
-    print("Imagen no encontrada")
-    return None
-
-def define_father(self, data_s):
-    pass
-
-def insert_imagen_nodo(dot, name_file):
+class Grafico:
     
-    if Search_image(name_file) != None:
-        imagen = Search_image(name_file)
-        print(imagen)
-        name_file = str(os.path.basename(imagen))
-        size = str(os.path.getsize(imagen))
-        new_node = dot.node(name_file, name_file + '\n' + size + ' bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
-        return new_node
-    else:
-        print("Imagen no encontrada, no se puede insertar en el nodo")
+    def __init__(self) -> None:
+        self.dot = Digraph(comment='Arbol AVL')
+
+    def Search_image(name_file):
+        carpeta = 'Data'
+        directorio_actual = os.path.abspath(carpeta)
+        for imagenes in os.listdir(carpeta):
+            path = os.path.join(directorio_actual, imagenes)
+            Format = imagenes.split('.')[1]
+            imagenes = imagenes.split('.')[0]
+            if imagenes == name_file:
+                if(Format == 'bmp'):
+                    bmp_path = path
+                    # Cargar la imagen BMP
+                    imagen_bmp = Image.open(bmp_path)
+                    # Guardar la imagen en formato PNG
+                    png_path = path
+                    png_path = png_path.replace('bmp', 'png')
+                    imagen_bmp.save(png_path, "PNG")
+                    os.remove(bmp_path)
+                    path = png_path
+                    #print("Se encontro una imagen en formato bmp, se ha convertido a png")
+                    return path
+                else:
+                    print("Imagen encontrada satisfactoriamente")
+                    return path
+
+        print("Imagen no encontrada")
         return None
+
+    def define_father(self, data_s):
+        pass
+
+    def insert_imagen_nodo(self, name_file):
+        if self.Search_image(name_file) != None:
+            imagen = self.Search_image(name_file)
+            print(imagen)
+            name_file = str(os.path.basename(imagen))
+            size = str(os.path.getsize(imagen))
+            new_node = self.node(name_file, name_file + '\n' + size + ' bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
+            return new_node
+        else:
+            print("Imagen no encontrada, no se puede insertar en el nodo")
+            return None
+        
+
+    def node_conection(self, name_file):
+        if(self.insert_imagen_nodo(self, name_file) != None):
+            node = self.insert_imagen_nodo(self, name_file)
+            self.edge(node, node, arrowsize='0.5')
+            return self
+        else:
+            print("No se puede conectar el nodo")
+            return False
+
+    def mostrar_grafico(self):
+        self.render('test-output/mi_grafico',format='jpg', view=True)
+        return self
     
-
-def node_conection(dot, name_file):
-    if(insert_imagen_nodo(dot, name_file) != None):
-        node = insert_imagen_nodo(dot, name_file)
-        dot.edge(node, node, arrowsize='0.5')
-        return dot
-    else:
-        print("No se puede conectar el nodo")
-        return False
-
 """
 # Crea un objeto de gráfico dirigido
 dot = Digraph(comment='Mi Gráfico')

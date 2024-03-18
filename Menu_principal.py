@@ -33,6 +33,7 @@ def regresar_menu(menu):
 #Función para el menú principal
 def menu_principal():
     
+    #Mensajes de introduccion al programa
     print("----- Bienvenido al programa de creacion de arboles AVL -----")
     print("----- Cargando datos de la carpeta Data -----")
     elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
@@ -103,13 +104,11 @@ def menu_principal():
                 busqueda = busqueda.lower()
                 if GraphList.Search_image(GraphList, busqueda) != None:
                     p, pad = Arbol.search(busqueda)
-                    nodos_consultados.append(p.get_data())
-                    print('Nodo Encontrado, agregado a la lista de nodos consultados')
-                else:
-                    print('Algun nodo con ese archivo no se ha creado, intente con otro nombre de archivo')
-                
-                print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
-                Arbol.get_list_ady().plot(Arbol.levels_nr())
+                    if(p != None):
+                        nodos_consultados.append(p.get_data())
+                        print('<<<<<<<<<<<<< - Nodo Encontrado, agregado a la lista de nodos consultados - >>>>>>>>>>>>')
+                    else:
+                        print('Algun nodo con ese archivo no se ha creado, intente con otro nombre de archivo')
 
                 menu = regresar_menu(menu)
                 
@@ -134,7 +133,7 @@ def menu_principal():
                         if len(List_nodes_types) == 0:
                             print("No se encontraron nodos que cumplan con la condición")
                         else:
-                            print("Los nodos que cumplen con la condicion de busqueda: ")
+                            print(" <<<<<<<<<<<<< - Los nodos que cumplen con la condicion de busqueda: - >>>>>>>>>>>>")
                             for node in List_nodes_types:
                                 nodos_consultados.append(node)
                                 print(node)
@@ -155,7 +154,7 @@ def menu_principal():
                         if len(List_nodes_sizes) == 0:
                             print("No se encontraron nodos que cumplan con la condición")
                         else:
-                            print("Los nodos que cumplen con la condicion de busqueda: ")
+                            print("<<<<<<<<<<<<< - Los nodos que cumplen con la condicion de busqueda: - >>>>>>>>>>>>")
                             for node in List_nodes_sizes:
                                 nodos_consultados.append(node)
                                 print(node)
@@ -199,7 +198,7 @@ def menu_principal():
                         if len(same_condition) == 0 :
                             print("No se encontraron nodos que cumplan con las dos condición")
                         else:
-                            print("Los nodos que cumplen con ambas condiciones de busqueda: ")
+                            print(" <<<<<<<<<<<<< - Los nodos que cumplen con ambas condiciones de busqueda - >>>>>>>>>>>> ")
                             for node in same_condition:
                                 nodos_consultados.append(node)
                                 print(node)
@@ -233,16 +232,14 @@ def menu_principal():
                     #continue
                 else:
                     Consul_info = nodos_consultados[int(Consul_info)-1]
-                    print("<<<<<< Datos del nodo encontrado >>>>>>")
+                    print("<<<<<< - Datos del nodo encontrado - >>>>>>")
                     Arbol.node_datas(Consul_info)
             
             menu = regresar_menu(menu)
             
         if menu_section == "5": 
             print("------------------------ Recorrido del Arbol AVL por niveles ------------------------")
-            Arbol.__levels_r(Arbol.get_root(), 0)
-            
-            
+            Arbol.levels_r(Arbol.get_root(), 0)
 
             menu = regresar_menu(menu)
             

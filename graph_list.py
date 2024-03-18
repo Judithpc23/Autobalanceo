@@ -7,22 +7,28 @@ from PIL import Image
 
 
 class GraphList:
+    
+    #Constructor
     def __init__(self) -> None:
         self.__n = 0
         self.__L: List[List[Any]] = []
 
+    #obetener el numero de vertices
     def get_L(self):
       return self.__L
 
+    #Creacion de un vertice
     def add_vertex(self, size) -> None:
         for i in range(size):
             self.__L.append([])
             self.__n += 1
 
+    #Creacion de una arista
     def add_edge(self, lista_level: List[Any], vi, vf) -> bool:
         self.__L[lista_level.index(vi)].append(vf)
         return True
   
+    #Buscar una imagen por su nombre sin extenxion, retornarndo su ruta de acceso.
     def Search_image(self,name_file: str) -> str:
         carpeta = 'Data'
         directorio_actual = os.path.abspath(carpeta)
@@ -64,17 +70,20 @@ class GraphList:
         return None
         
 
+    #Genera el arbol a partir de una lista de adyacencia.
     def plot(self, lista_level) -> "gv.Digraph":
         graph = gv.Digraph()
+        
         #Definir los nodos del grafo
+        
         for i in range(self.__n):
             if self.Search_image(f'{lista_level[i]}') != None:
                 imagen = self.Search_image(f'{lista_level[i]}')
                 name_file = str(os.path.basename(imagen))
                 size = str(os.path.getsize(imagen))
                 graph.node(f'{lista_level[i]}', f'{name_file}\n{size} bytes', image=imagen, fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
-            else:
-                graph.node(f'{lista_level[i]}' , f'{lista_level[i]}', fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
+            #else:
+                #graph.node(f'{lista_level[i]}' , f'{lista_level[i]}', fontsize="7", fontcolor='WHITE', style='filled', border = '2', fixedsize='true', shape='rect', penwidth='4')
 
         #Lista para las aristas, para no repetir aristas
         edges = []
@@ -87,4 +96,5 @@ class GraphList:
                     graph.edge(f'{lista_level[i]}', f'{j}', arrowsize='0.5')
                     #Añado a la lista
                     edges.append((i, j))
-        return graph.render(f'test-grafico-generado/mi_grafico{random.randint(0,50)}',format='pdf', view=False, cleanup=True)
+        #return graph.render(f'test-grafico-generado/mi_grafico{random.randint(0,50)}',format='pdf', view=True, cleanup=True)
+        return graph.render('test-grafico-generado/mi_grafico',format='pdf', view=True, cleanup=True)

@@ -70,13 +70,12 @@ def menu_principal():
             if GraphList.Search_image(GraphList, elem) != None:
                 if Arbol.insert(elem):
                     print('Inserción exitosa')
+                    print("------------------------ Arbol creado en la carpeta test-grafico-generado ------------------------")
+                    Arbol.get_list_ady().plot(Arbol.levels_nr())
                 else:
                     print('El elemento ya existe en el arbol. :)')
             else:
                 print('Elemento no existe, intente con otro nombre de archivo')
-            
-            print("------------------------ Arbol creado en la carpeta test-grafico-generado ------------------------")
-            Arbol.get_list_ady().plot(Arbol.levels_nr())
             
             menu = regresar_menu(menu)
             
@@ -100,7 +99,7 @@ def menu_principal():
             print("1.Buscar un nodo por nombre de archivo")
             print("2.Buscar nodos por tipo y peso de archivo")
             
-            tipo_busqueda = input("Ingrese el número de la operación que desea realizar: ")
+            tipo_busqueda = str(input("Ingrese el número de la operación que desea realizar: "))
             
             if tipo_busqueda == "1":
                 print("------------------------ Buscar un nodo por nombre de archivo ------------------------")
@@ -121,12 +120,12 @@ def menu_principal():
                 print("1.Buscar nodos por tipo")
                 print("2.Buscar nodos por peso")
                 print("3.Buscar nodos por peso y tipo")
-                tipo_busqueda2 = input('Digita la operación a realizar: ')
+                tipo_busqueda2 = str(input('Digita la operación a realizar: '))
                 
                 if(tipo_busqueda2 == "1"):
                     print("------------------------ Buscar nodos por tipo de archivo ------------------------")
                     print("Escriba el tipo de archivo que desea buscar", "\n", "(Las categorias permitidas son: Bike, Cars, Cats, Dogs, Flowers, Horses y Human)")
-                    busqueda = input("Categoria: ")
+                    busqueda = str(input("Categoria: "))
                     busqueda = busqueda.lower()
                     if (busqueda != "bike" and busqueda != "cars" and busqueda != "cats" and busqueda != "dogs" and busqueda != "flowers" and busqueda != "horses" and busqueda != "human"):
                         print("Operación no válida")
@@ -147,8 +146,8 @@ def menu_principal():
                     print("------------------------ Buscar nodos por peso de archivo ------------------------")
                         
                     print("Escriba el valor del peso minimo y maximo del archivo en Bytes que desea buscar: ")
-                    peso_min = input("Valor de peso Minimo: ")
-                    peso_max = input("Valor de peso Maximo: ")
+                    peso_min = int(input("Valor de peso Minimo: "))
+                    peso_max = int(input("Valor de peso Maximo: "))
                     
                     if(peso_min > peso_max):
                         print("Operación no válida")
@@ -169,11 +168,11 @@ def menu_principal():
                     
                     print("------------------------ Buscar nodos por peso y tipo de archivo ------------------------")
                     print("Escriba el tipo de archivo que desea buscar", "\n", "(Las categorias permitidas son: Bike, Cars, Cats, Dogs, Flowers, Horses y Human)")
-                    busqueda = input("Categoria: ")
+                    busqueda = str(input("Categoria: "))
                     
                     print("Escriba el valor del peso minimo y maximo del archivo en Bytes que desea buscar: ")
-                    peso_min = input("Valor de peso Minimo: ")
-                    peso_max = input("Valor de peso Maximo: ")
+                    peso_min = int(input("Valor de peso Minimo: "))
+                    peso_max = int(input("Valor de peso Maximo: "))
                     
                     busqueda = busqueda.lower()
                     if (busqueda != "bike" and busqueda != "cars" and busqueda != "cats" and busqueda != "dogs" and busqueda != "flowers" and busqueda != "horses" and busqueda != "human"):
@@ -197,7 +196,7 @@ def menu_principal():
                         same_condition = []
                         for node in List_nodes_types:
                             if node in List_nodes_sizes:
-                                same_condition = same_condition.append(node)
+                                same_condition.append(node)
 
                         if len(same_condition) == 0 :
                             print("No se encontraron nodos que cumplan con las dos condición")
@@ -207,19 +206,19 @@ def menu_principal():
                                 nodos_consultados.append(node)
                                 print(node)
                     
-                elif tipo_busqueda2 != "1" or tipo_busqueda2 != "2" or tipo_busqueda2 != "3":
+                elif tipo_busqueda2 != "1" and tipo_busqueda2 != "2" and tipo_busqueda2 != "3":
                     print("Operación no válida")
                         
                 
                 menu = regresar_menu(menu)
                 
-            elif tipo_busqueda != "1" or tipo_busqueda != "2":
+            elif tipo_busqueda != "1" and tipo_busqueda != "2":
                 print("Operación no válida")
             
             menu = regresar_menu(menu)
             
         if menu_section == "4": 
-            print("------------------------ Nodos Buscados en la opereracion 3 y 4 ------------------------")
+            print("------------------------ Nodos encontrados en la operación 3 ------------------------")
             
             if len(nodos_consultados) == 0:
                 print("No se han realizado búsquedas")

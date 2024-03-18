@@ -75,7 +75,7 @@ class Node:
     def set_type(self, name:str) -> None:
         type = None
         
-        if(name.split()[0]== '0'):
+        if(name.split('0')[0] == ''):
             type = 'flowers'
         elif(name.split('_')[0] == 'carsgraz'):
             type = 'cars'
@@ -152,19 +152,19 @@ class Tree:
     # <<<<<<<<<<<<<<<<<< POSTORDEN DEL ARBOL >>>>>>>>>>>>>>>>>>>>>>>>
     
     def postorder_nr(self) -> 'str':
-        postorden = ""
-        p, s, s_data = self.__root, Stack(), Stack()
-        s.add(p)
-        while not s.is_empty():
-            p = s.remove()
-            s_data.add(p.get_data())
+        p = self.__root
+        s: List['Node'] = []
+        s_data: List['str'] = []
+        s.append(p)
+        while len(s) != 0:
+            p = s.pop()
+            s_data.append(p.get_data())
             if p.get_left() is not None:
-                s.add(p.get_left())
+                s.append(p.get_left())
             if p.get_right() is not None:
-                s.add(p.get_right())
-        while not s_data.is_empty():
-            postorden +=f'{s_data.remove()}-'
-        return postorden    
+                s.append(p.get_right())
+
+        return s_data
     
     # <<<<<<<<<<<<<<<<<< FUNCIONES DE BUSQUEDA, INSERCIÓN Y ELIMINACIÓN >>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -222,10 +222,11 @@ class Tree:
                     pad.set_node_right(None)
             
             elif p.get_left() != None and p.get_right() == None:
-                if p == pad.get_left():
-                    pad.set_node_left(p.get_left())
-                else:
-                    pad.set_node_right(p.get_left())
+                if pad != None:
+                    if p == pad.get_left():
+                        pad.set_node_left(p.get_left())
+                    else:
+                        pad.set_node_right(p.get_left())
             
             elif p.get_left() == None and p.get_right() != None:
                 if p == pad.get_left():
@@ -237,12 +238,17 @@ class Tree:
                 aux = p.get_data()
                 p.set_data(pred.get_data())
                 if pred.get_left() != None:
-                    pad_pred.set_node_right(pred.get_left())
-                # else:
-                #     if pad_pred.get_data() == aux:
-                #         p.set_node_left(None)
-                #     else:
-                #         pad_pred.set_node_right(None)
+                    if pad_pred is not None:
+                        if pred == pad_pred.get_left():
+                            pad_pred.set_node_left(pred.get_left())
+                        else:
+                            pad_pred.set_node_right(pred.get_left())
+                else:
+                    if pad_pred is not None:
+                        if pred == pad_pred.get_left():
+                            pad_pred.set_node_left(None)
+                    else:
+                        pad_pred.set_node_right(None)
             self.rebalance()
             self.set_list_ady()
             return True
@@ -457,36 +463,38 @@ class Tree:
     def node_datas(self, elem: Any):
         
         node, pad = self.search(elem)
-        
-        nivel_nodo = self.node_level(elem)
-        
-        data_size = node.set_size(elem)
-        
-        factor_equilibrio_nodo = self.getBalance(node.get_data())
-        if self.search_father(node.get_data()) == None:
-            pad_nodo = 'El nodo no tiene padre'
-        else:
-            pad_nodo = self.search_father(node.get_data())
+        if node is not None:
+            nivel_nodo = self.node_level(elem)
+            
+            data_size = node.set_size(elem)
+            
+            factor_equilibrio_nodo = self.getBalance(node.get_data())
+            if self.search_father(node.get_data()) == None:
+                pad_nodo = 'El nodo no tiene padre'
+            else:
+                pad_nodo = self.search_father(node.get_data())
 
-        if self.searchGrandPa(node.get_data()) == None:
-            abu_nodo = 'El nodo no tiene abuelo'
-        else:
-            abu_nodo = self.searchGrandPa(node.get_data()).get_data()
+            if self.searchGrandPa(node.get_data()) == None:
+                abu_nodo = 'El nodo no tiene abuelo'
+            else:
+                abu_nodo = self.searchGrandPa(node.get_data()).get_data()
 
-        if self.searchUncle(node.get_data()) == False:
-            tio_nodo = 'El nodo no tiene tío'
+            if self.searchUncle(node.get_data()) == False:
+                tio_nodo = 'El nodo no tiene tío'
+            else:
+                tio_nodo = self.searchUncle(node.get_data()).get_data()
+            print(" ")
+            print("Informacion del nodo: ", elem)    
+            print("El peso de la imagen: ", data_size, "bytes")
+            print(" ")
+            print("Nivel del nodo: ", nivel_nodo)
+            print("Factor de equilibrio del nodo: ", factor_equilibrio_nodo)
+            print("Padre del nodo: ", pad_nodo)
+            print("Abuelo del nodo: ", abu_nodo)
+            print("Tío del nodo: ", tio_nodo)
+            print(" ")
         else:
-            tio_nodo = self.searchUncle(node.get_data()).get_data()
-        print(" ")
-        print("Informacion del nodo: ", elem)    
-        print("El peso de la imagen: ", data_size, "bytes")
-        print(" ")
-        print("Nivel del nodo: ", nivel_nodo)
-        print("Factor de equilibrio del nodo: ", factor_equilibrio_nodo)
-        print("Padre del nodo: ", pad_nodo)
-        print("Abuelo del nodo: ", abu_nodo)
-        print("Tío del nodo: ", tio_nodo)
-        print(" ")
+            print('El nodo ha sido eliminado, información no disponible')
         
         
         
@@ -495,27 +503,24 @@ class Tree:
     # ----------------- retornar lista de nodos con un rango de peso minimo y maximo -----------------
     def nodes_sizes(self, min: int, max: int) -> List:
         nodes = []
-        nodos = self.postorder_nr()
-        nodos = nodos.split('-')
-        nodos.pop()
+        nodos: List['str'] = self.postorder_nr()
         for elem in nodos:
             p, pad = self.search(elem)
             nodo_size = p.set_size(elem)
+            nodo_size = (int) (nodo_size)
             if nodo_size >= min and nodo_size <= max:
-                nodes.append(p.get_data)
+                nodes.append(p.get_data())
         return nodes
     
     # ----------------- retornar lista de nodos de un mismo tipo de categoria -----------------
     def nodes_type(self, category: str) -> List:
         categoria = []
-        nodos = self.postorder_nr()
-        nodos = nodos.split('-')
-        nodos.pop()
+        nodos: List['str'] = self.postorder_nr()
         for elem in nodos:
             p, pad = self.search(elem)
             nodo_category = p.set_type(elem)
             if nodo_category == category:
-                categoria.append(p.get_data)
+                categoria.append(p.get_data())
         return categoria
 
 

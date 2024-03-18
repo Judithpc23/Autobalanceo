@@ -32,10 +32,22 @@ def menu_principal():
     #Mensajes de introduccion al programa
     print("----- Bienvenido al programa de creacion de arboles AVL -----")
     print("----- Cargando datos de la carpeta Data -----")
-    elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
+    #
+    #elem_root = input("Ingrese el nombre del archivo para establecer la raiz del arbol, sin su extención (Ejemplo: '0001'): ")
     
+    prueba = ['dog.161', '0129', 'horse-42', 'bike_107', 'cat.142', 'dog.73', 'rider-107', 'bike_110', 'horse-9', 'carsgraz_177', 'carsgraz_100', 'rider-37', 'cat.72', '0038', 'dog.60', 'bike_238', 'horse-198', '0177', 'carsgraz_354', 'cat.153', 'carsgraz_127', 'bike_072', 'rider-201', 'rider-125', 'cat.100', 'dog.165', 'horse-139', '0130']
+    
+
     #Creación del árbol
-    Arbol = Tree(Node(elem_root))
+    Arbol = Tree(Node(prueba[0]))
+    prueba.pop(0)
+    
+    for i in prueba:
+        Arbol.insert(i)
+    
+    print("------------------------ Arbol creado en la carpeta test-grafico-generado ------------------------")
+    Arbol.get_list_ady().plot(Arbol.levels_nr())  
+      
     '''
     #Creación del gráfico
     grafico = Grafico()

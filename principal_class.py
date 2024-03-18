@@ -205,7 +205,7 @@ class Tree:
 
     #Predecesor de un nodo.
     def pred (self, node: 'Node'):
-        p, pad = node.get_left(), None
+        p, pad = node.get_left(), node
         while p.get_right() is not None:
             pad = p
             p = p.get_right()
@@ -234,21 +234,19 @@ class Tree:
                 else:
                     pad.set_node_right(p.get_right())
             else:
-                pred, pad_pred = self.pred(p) #Algoritmo de predecesor
-                aux = p.get_data()
+                pred, pad_pred = self.pred(p)
                 p.set_data(pred.get_data())
-                if pred.get_left() != None:
-                    if pad_pred is not None:
-                        if pred == pad_pred.get_left():
-                            pad_pred.set_node_left(pred.get_left())
-                        else:
-                            pad_pred.set_node_right(pred.get_left())
+                if pred.get_left() is not None:
+                    if pad_pred == p:
+                        pad_pred.set_node_left(pred.get_left())
+                    else:
+                        pad_pred.set_node_right(pred.get_left())
                 else:
-                    if pad_pred is not None:
-                        if pred == pad_pred.get_left():
-                            pad_pred.set_node_left(None)
-                        else:
-                            pad_pred.set_node_right(None)
+                    if pad_pred == p:
+                        pad_pred.set_node_left(None)
+                    else:
+                        pad_pred.set_node_right(None)
+                del pred
             self.rebalance()
             self.set_list_ady()
             return True
@@ -366,7 +364,6 @@ class Tree:
         self.__levels_r(self.__root, 0, lista)
         return lista
         
-        
     # <<<<<<<<<<<<<<<<<< FUNCIONES PARA EL AUTOBALANCEO >>>>>>>>>>>>>>>>>>>>>>>>
     def getBalance(self, elem: str):
         node, pad = self.search(elem)
@@ -422,6 +419,8 @@ class Tree:
         if fact_balance == 2:
             if self.getBalance(node.get_right().get_data()) == 1:
               self.rotate_left(i)
+            elif self.getBalance(node.get_right().get_data()) == 0:
+                  self.rotate_left(i)
             else:
               self.rotate_right_left(i)
         

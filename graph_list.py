@@ -1,4 +1,3 @@
-import random
 import graphviz as gv
 from typing import List
 from typing import Any

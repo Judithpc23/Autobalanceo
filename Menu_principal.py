@@ -1,7 +1,4 @@
-
 from principal_class import Tree, Node
-from datos_tree import tree_size, tree_height, tree_leaves, tree_for_level
-from grafico import Grafico
 from graph_list import GraphList
 from graphviz import Digraph
 
@@ -87,8 +84,15 @@ def menu_principal():
             print("------------------------ Eliminar un nodo ------------------------")
             elem = input("Escribe el nombre del archivo a eliminar sin su extención (Ejemplo: '0001'): ")
             elem = elem.lower()
-            
-            print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
+            if GraphList.Search_image(GraphList, elem) != None:
+                if Arbol.delete(elem):
+                    print('Eliminación exitosa')
+                    print("------------------------ Arbol mostrado en la carpeta test-grafico-generado ------------------------")
+                    Arbol.get_list_ady().plot(Arbol.levels_nr())
+                else:
+                    print('El elemento no existe en el arbol. :)')
+            else:
+                print('Elemento no existe, intente con otro nombre de archivo')
             menu = regresar_menu(menu)
             
         if menu_section == "3":
@@ -239,8 +243,9 @@ def menu_principal():
             
         if menu_section == "5": 
             print("------------------------ Recorrido del Arbol AVL por niveles ------------------------")
-            Arbol.levels_r(Arbol.get_root(), 0)
-
+            recorrido_niveles = []
+            Arbol.levels(recorrido_niveles)
+            print ("Recorrido por niveles: ", recorrido_niveles)
             menu = regresar_menu(menu)
             
         if menu_section == "6": 

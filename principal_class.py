@@ -198,8 +198,18 @@ class Tree:
                 pad.set_node_left(to_insert)
             else:
                 pad.set_node_right(to_insert)
+
+            self.rebalance()
             self.set_list_ady()
             return True
+
+    #Predecesor de un nodo.
+    def pred (self, node: 'Node'):
+        p, pad = node.get_left(), None
+        while p.get_right() is not None:
+            pad = p
+            p = p.get_right()
+        return p, pad
 
     #Eliminar un nodo.
     def delete(self, elem) -> bool:
@@ -222,15 +232,18 @@ class Tree:
                     pad.set_node_left(p.get_right())
                 else:
                     pad.set_node_right(p.get_right())
-            
             else:
                 pred, pad_pred = self.pred(p) #Algoritmo de predecesor
+                aux = p.get_data()
                 p.set_data(pred.get_data())
                 if pred.get_left() != None:
                     pad_pred.set_node_right(pred.get_left())
-                else:
-                    pad_pred.set_node_right(None)
-            
+                # else:
+                #     if pad_pred.get_data() == aux:
+                #         p.set_node_left(None)
+                #     else:
+                #         pad_pred.set_node_right(None)
+            self.rebalance()
             self.set_list_ady()
             return True
         return False
@@ -330,44 +343,90 @@ class Tree:
         else:
             return max(self.get_height(node.get_left()), self.get_height(node.get_right())) + 1
 
-    def list_level(self, node: "Node", n):
+    def list_level(self, node: "Node", n, lista: List['Any']):
         if node != None:
             if n == 0:
-                print(node.get_data(), end=' ')
-            self.list_level(node.get_left(), n-1)
-            self.list_level(node.get_right(), n-1)
-    
-    def levels_r(self, node, level) -> None:
+                return lista.append(node.get_data())
+            self.list_level(node.get_left(), n-1, lista)
+            self.list_level(node.get_right(), n-1, lista)
+
+    def __levels_r(self, node, level, lista:List['Any']) -> None:
         if level <= self.get_height(self.__root) - 1:
-            self.list_level(node, level)
-            self.levels_r(node, level + 1)
+            self.list_level(node, level, lista)
+            self.__levels_r(node, level + 1, lista)
+        return lista
     
-    def levels(self) -> None:
-        self.__levels_r(self.__root, 0)
+    def levels(self, lista: List['Any']) -> None:
+        self.__levels_r(self.__root, 0, lista)
+        return lista
         
         
     # <<<<<<<<<<<<<<<<<< FUNCIONES PARA EL AUTOBALANCEO >>>>>>>>>>>>>>>>>>>>>>>>
-    def get_balance(self, node: "Node"):
+    def getBalance(self, elem: str):
+        node, pad = self.search(elem)
         if node is None:
-            return 0
+            return False
         return self.get_height(node.get_right()) - self.get_height(node.get_left())
     
-    def rebalance(self, node: "Node"):
-        if self.get_balance(node) > 1:
-            if self.get_balance(node.get_right()) >= 0:
-                pass
-                #return self.rotate_left(node)
+    def rotate_left(self, elem):
+        node, pad = self.search(elem)
+        auxNode = node.get_right()
+        node.set_node_right(auxNode.get_left())
+        auxNode.set_node_left(node)
+        if node == self.__root:
+          self.set_root(auxNode)
+        elif node.get_data() > pad.get_data():
+          pad.set_node_right(auxNode)
+        else:
+          pad.set_node_left(auxNode)
+        self.set_list_ady()
+        return auxNode
+
+    def rotate_right(self, elem):
+        node, pad = self.search(elem)
+        auxNode = node.get_left()
+        node.set_node_left(auxNode.get_right())
+        auxNode.set_node_right(node)
+        if node == self.__root:
+          self.set_root(auxNode)
+        elif node.get_data() > pad.get_data():
+          pad.set_node_right(auxNode)
+        else:
+          pad.set_node_left(auxNode)
+        self.set_list_ady()
+        return auxNode
+
+    def rotate_right_left(self, elem):
+        node, pad = self.search(elem)
+        self.rotate_right(node.get_right().get_data())
+        return self.rotate_left(elem)
+
+    def rotate_left_right(self, elem):
+        node, pad = self.search(elem)
+        self.rotate_left(node.get_left().get_data())
+        return self.rotate_right(node.get_data())
+    
+    def rebalance(self):
+      lista = []
+      self.levels(lista)
+      lista.reverse()
+      for i in lista:
+        node, pad = self.search(i)
+        fact_balance = self.getBalance(i)
+        if fact_balance == 2:
+            if self.getBalance(node.get_right().get_data()) == 1:
+              self.rotate_left(i)
             else:
-                pass
-                # return self.rotate_right_left(node)
-        elif self.get_balance(node) < -1:
-            if self.get_balance(node.get_left()) <= 0:
-                pass
-                # return self.rotate_right(node)
-            else:
-                pass
-                # return self.rotate_left_right(node)
-        return node
+              self.rotate_right_left(i)
+        
+        elif fact_balance == -2:
+          if self.getBalance(node.get_left().get_data()) == -1:
+              self.rotate_right(i)
+          else:
+            self.rotate_left_right(i)
+        
+        else:
+          pass
         
     # <<<<<<<<<<<<<<<<<< FUNCIONES PARA LA OBTENCIÓN DE DATOS DE LOS NODOS >>>>>>>>>>>>>>>>>>>>>>>>
     
@@ -377,14 +436,6 @@ class Tree:
         return 0
       else:
         return self.get_size(node.get_left()) + 1 + self.get_size(node.get_right())
-
-    #Predecesor de un nodo.
-    def pred (self, node: 'Node'):
-        p, pad = node.get_left(), None
-        while p.get_right() is not None:
-            pad = p
-            p = p.get_right()
-        return p, pad
         
     #Buscar un nodo por nivel.
     def node_level(self, elem):
@@ -411,7 +462,7 @@ class Tree:
         
         data_size = node.set_size(elem)
         
-        factor_equilibrio_nodo = self.get_balance(node)
+        factor_equilibrio_nodo = self.getBalance(node.get_data())
         if self.search_father(node.get_data()) == None:
             pad_nodo = 'El nodo no tiene padre'
         else:
@@ -470,19 +521,29 @@ class Tree:
 
 # T = Tree(Node('0001'))
 # T.insert('carsgraz_001')
+# T.node_datas('carsgraz_001')
 # T.insert('horse-17')
+# T.node_datas('horse-17')
 # T.insert('horse-18')
+# T.node_datas('horse-18')
 # T.insert('rider-8')
-# T.insert('rider-20')
-# T.insert('cat.8')
-# T.insert('dog.27')
-# print(T.insert('bike_128'))
-# print(T.searchGrandPa('horse-18').get_data())
-# print(T.searchUncle('horse-18').get_data())
-# print(T.levels_nr())
-
-# print(T.get_list_ady().get_L())
-
-# print('INFO NODO')
 # T.node_datas('rider-8')
+# T.insert('rider-20')
+# T.node_datas('rider-20')
+# T.insert('cat.8')
+# T.node_datas('cat.8')
+# T.insert('dog.27')
+# T.node_datas('dog.27')
+# print(T.insert('bike_128'))
+# T.node_datas('bike_128')
+# T.delete('dog.27')
+# T.delete('rider-8')
+# T.delete('rider-20')
+# T.delete('bike_128')
+# print(T.getBalance('carsgraz_001'))
 # T.get_list_ady().plot(T.levels_nr())
+
+# print(T.get_root().get_left().get_right().get_data())
+
+# print(T.levels([]))
+# print(T.get_list_ady().get_L())

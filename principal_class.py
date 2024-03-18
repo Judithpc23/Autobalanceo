@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Type
+from typing import Any, List, Optional
 import os
 from graph_list import GraphList
 
@@ -247,8 +247,8 @@ class Tree:
                     if pad_pred is not None:
                         if pred == pad_pred.get_left():
                             pad_pred.set_node_left(None)
-                    else:
-                        pad_pred.set_node_right(None)
+                        else:
+                            pad_pred.set_node_right(None)
             self.rebalance()
             self.set_list_ady()
             return True

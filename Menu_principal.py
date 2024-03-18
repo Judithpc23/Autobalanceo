@@ -1,6 +1,5 @@
 from principal_class import Tree, Node
 from graph_list import GraphList
-from graphviz import Digraph
 
 #Función para regresar al menú principal
 def regresar_menu(menu):

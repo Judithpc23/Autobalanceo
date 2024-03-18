@@ -28,9 +28,13 @@ class GraphList:
         directorio_actual = os.path.abspath(carpeta)
         for imagenes in os.listdir(carpeta):
             path = os.path.join(directorio_actual, imagenes)
-            Format = imagenes.split('.')[1]
-            imagenes = imagenes.split('.')[0]
-            if imagenes == name_file:
+            imagenes_name = imagenes.split('.')
+            if len(imagenes_name) > 2:
+                imagenes_name = f'{imagenes_name[0]}.{imagenes_name[1]}'
+            else:
+                imagenes_name = imagenes_name[0]
+            if imagenes_name == name_file:
+                Format = imagenes.split('.')[-1]
                 if(Format == 'bmp'):
                     bmp_path = path
                     # Cargar la imagen BMP
@@ -43,16 +47,25 @@ class GraphList:
                     path = png_path
                     #print("Se encontro una imagen en formato bmp, se ha convertido a png")
                     return path
-                else:
-                    print("Imagen encontrada satisfactoriamente")
+                elif(Format == 'jpg'):
+                    bmp_path = path
+                    # Cargar la imagen BMP
+                    imagen_bmp = Image.open(bmp_path)
+                    # Guardar la imagen en formato PNG
+                    png_path = path
+                    png_path = png_path.replace('jpg', 'png')
+                    imagen_bmp.save(png_path, "PNG")
+                    os.remove(bmp_path)
+                    path = png_path
+                    #print("Se encontro una imagen en formato bmp, se ha convertido a png")
                     return path
-
-        print("Imagen no encontrada")
+                else:
+                    return path
         return None
         
 
-    def plot(self, lista_level) -> "gv.Graph":
-        graph = gv.Graph()
+    def plot(self, lista_level) -> "gv.Digraph":
+        graph = gv.Digraph()
         #Definir los nodos del grafo
         for i in range(self.__n):
             if self.Search_image(f'{lista_level[i]}') != None:
@@ -71,8 +84,7 @@ class GraphList:
             #
             for j in l:
                 if not ((i, j) in edges or (j, i) in edges):
-                    graph.edge(f'{lista_level[i]}', f'{j}')
+                    graph.edge(f'{lista_level[i]}', f'{j}', arrowsize='0.5')
                     #Añado a la lista
                     edges.append((i, j))
-                    
-        return graph.render(f'test-grafico-generado/mi_grafico{random.randint(0,50)}',format='png', view=False)
+        return graph.render(f'test-grafico-generado/mi_grafico{random.randint(0,50)}',format='pdf', view=False, cleanup=True)

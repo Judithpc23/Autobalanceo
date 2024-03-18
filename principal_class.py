@@ -1,7 +1,5 @@
 from typing import Any, List, Optional, Type
 import os
-
-from numpy import delete
 from graph_list import GraphList
 
 class Queue:
@@ -47,17 +45,17 @@ class Node:
         type = None
         
         if(name.split()[0]== '0'):
-            type = 'Flower'
+            type = 'Flowers'
         elif(name.split('-')[0] == 'carsgraz'):
-            type = 'Car'
+            type = 'Cars'
         elif(name.split('.')[0] == 'cat'):
-            type = 'Cat'
+            type = 'Cats'
         elif(name.split('-')[0] == 'rider'):
             type = 'Human'
         elif(name.split('.')[0] == 'dog'):
-            type = 'Dog'
+            type = 'Dogs'
         elif(name.split('-')[0] == 'horse'):
-            type = 'Horse'
+            type = 'Horses'
         elif(name.split('.')[0] == 'bike'):
             type = 'Bike'
         
@@ -127,6 +125,20 @@ class Tree:
                 pad = p
                 p = p.get_right()
         return p, pad
+    
+    def node_level(self, elem):
+        cont = 0
+        p = self.get_root()
+        while (p != None):
+            if p.get_data() == elem:
+                return cont
+            elif elem < p.get_data():
+                p = p.get_left()
+                cont += 1
+            else:
+                p = p.get_right()
+                cont += 1
+        return cont
     
     def insert(self, elem) -> bool:
         root = self.get_root()
@@ -248,11 +260,13 @@ class Tree:
     #Busqueda del abuelo de un nodo.
     def searchGrandPa(self, elem: str):
         p, pad = self.search(elem)
-        pad, grandPa = self.search(pad.get_data())
-        return grandPa
+        if pad is not None:
+            pad, grandPa = self.search(pad.get_data())
+            return grandPa
+        return None
     
     #Busqueda del tío de un nodo.
-    def searchUncle(self, elem: str) -> Optional['bool']:
+    def searchUncle(self, elem: str) -> Optional['Node']:
         p, pad = self.search(elem)
         grandPa = self.searchGrandPa(elem)
         if grandPa is not None:
@@ -289,7 +303,7 @@ class Tree:
     def list_level(self, node: "Node", n):
         if node != None:
             if n == 0:
-                print(node.data, end=' ')
+                print(node.get_data(), end=' ')
             self.list_level(node.get_left(), n-1)
             self.list_level(node.get_right(), n-1)
     
@@ -327,19 +341,29 @@ class Tree:
         
     # <<<<<<<<<<<<<<<<<< FUNCIONES PARA LA OBTENCIÓN DE DATOS DE LOS NODOS >>>>>>>>>>>>>>>>>>>>>>>>
     
-    def node_datas(self, node: "Node"):
-        
-        nivel_nodo = self.get_height()
-        factor_equilibrio_nodo = 0
-        pad_nodo = self.search_father_node()
-        abu_nodo = 0
-        tio_nodo = 0
-        
+    def node_datas(self, elem: Any):
+        node, pad = self.search(elem)
+        nivel_nodo = self.node_level(elem)
+        factor_equilibrio_nodo = self.get_balance(node)
+        if self.search_father(node.get_data()) == None:
+            pad_nodo = 'El nodo no tiene padre'
+        else:
+            pad_nodo = self.search_father(node.get_data())
+
+        if self.searchGrandPa(node.get_data()) == None:
+            abu_nodo = 'El nodo no tiene abuelo'
+        else:
+            abu_nodo = self.searchGrandPa(node.get_data()).get_data()
+
+        if self.searchUncle(node.get_data()) == False:
+            tio_nodo = 'El nodo no tiene tío'
+        else:
+            tio_nodo = self.searchUncle(node.get_data()).get_data()
         print("Nivel del nodo: ", nivel_nodo)
         print("Factor de equilibrio del nodo: ", factor_equilibrio_nodo)
         print("Padre del nodo: ", pad_nodo)
         print("Abuelo del nodo: ", abu_nodo)
-        print("Tio del nodo: ", tio_nodo)
+        print("Tío del nodo: ", tio_nodo)
         
     def nodes_sizes(self, min: int, max: int) -> List:
         nodes = []
@@ -359,35 +383,35 @@ class Tree:
     def nodes_type(self, category: str) -> List:
         categoria = []
         nodo = self.get_root()
-        queue = Queue()
-        queue.put(nodo)
-        while not queue.empty():
-            nodo = queue.get()
+        queue: List['Node'] = []
+        queue.append(nodo)
+        while len(queue) != 0:
+            nodo = queue.pop(0)
             node_data = nodo.get_data()
             if nodo.set_type(node_data) == category:
                 categoria.append(node_data)
             if nodo.get_left() != None:
-                queue.put(nodo.get_left())
+                queue.append(nodo.get_left())
             if nodo.get_right() != None:
-                queue.put(nodo.get_right())
+                queue.append(nodo.get_right())
         return categoria
 
 
-T = Tree(Node(7))
-T.insert(4)
-T.insert(54)
-T.insert(40)
-T.insert(60)
-T.insert(3)
-print(T.insert(5))
-print(T.searchGrandPa(40).get_data())
-print(T.searchUncle(40).get_data())
+# T = Tree(Node('0001'))
+# T.insert('carsgraz_001')
+# T.insert('horse-17')
+# T.insert('horse-18')
+# T.insert('rider-8')
+# T.insert('rider-20')
+# T.insert('cat.8')
+# T.insert('dog.27')
+# print(T.insert('bike_128'))
+# print(T.searchGrandPa('horse-18').get_data())
+# print(T.searchUncle('horse-18').get_data())
+# print(T.levels_nr())
 
-T.get_list_ady().plot(T.levels_nr())
+# print(T.get_list_ady().get_L())
 
-print(T.levels_nr())
-T.delete(60)
-
-print(T.levels_nr())
-print(T.get_list_ady().get_L())
-T.get_list_ady().plot(T.levels_nr())
+# print('INFO NODO')
+# T.node_datas('rider-8')
+# T.get_list_ady().plot(T.levels_nr())
